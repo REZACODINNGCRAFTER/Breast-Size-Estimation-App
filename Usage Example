@@ -1,0 +1,37 @@
+# Initialize with custom configuration
+config = {
+    'image_size': (224, 224),
+    'batch_size': 16,
+    'epochs': 10,
+    'data_dir': 'path/to/dataset',
+    'use_transfer_learning': True,
+    'base_model': 'EfficientNetB0',
+    'optimizer': {'type': 'RMSprop', 'learning_rate': 0.0001},
+    'use_advanced_augmentation': True,
+    'checkpoint_path': 'best_breast_size_model.h5'
+}
+
+estimator = BreastSizeEstimator(config)
+
+# Prepare data with test split
+estimator.prepare_data(test_split=0.1)
+
+# Build and train the model
+estimator.build_model()
+estimator.train_model(use_checkpoint=True)
+
+# Evaluate on test set
+estimator.evaluate_model(use_test_set=True)
+
+# Perform cross-validation
+histories = estimator.cross_validate()
+
+# Predict breast size for a new image
+predicted_size = estimator.predict_breast_size('path/to/image.jpg')
+print(f"Predicted breast size: {predicted_size}")
+
+# Plot training history
+estimator.plot_training_history()
+
+# Save the model
+estimator.save_model('my_model.h5')
